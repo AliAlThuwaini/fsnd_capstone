@@ -1,0 +1,113 @@
+Movies Insertion:
+==================
+insert into movies 
+(title, release_date)
+values 
+('Judas and the Black Messiah', '2021-02-12T21:30:00.000Z'),
+('Coming 2 America', '2021-03-05T21:30:00.000Z'),
+('Mortal Kombat', '2021-04-16T21:30:00.000Z'),
+('Respect', '2021-08-13T21:30:00.000Z');
+
+
+
+Actors Insertion:
+==================
+insert into actors 
+(name, age, gender)
+values 
+('Daniel Kaluuya', 31, 'male'),
+('Dominique Fishback', 29, 'female'),
+('Wesley Snipes', 59, 'male'),
+('Shari Headley', 57, 'female'),
+('Robin Shou', 61, 'male'),
+('Bridgette Wilson', 48, 'female'),
+('Jennifer Hudson', 40, 'female'),
+('Marlon Wayans', 49, 'male')
+
+
+
+
+
+
+
+
+
+Movies:
+============
+id: 1
+title: 'Judas and the Black Messiah'
+release_date: '2021-02-12T21:30:00.000Z'
+
+id: 2
+title: 'Coming 2 America'
+release_date: '2021-03-05T21:30:00.000Z'
+
+id: 3
+title: 'Mortal Kombat'
+release_date: '2021-04-16T21:30:00.000Z'
+
+id: 4
+title: 'Respect'
+release_date: '2021-08-13T21:30:00.000Z'
+
+
+
+
+
+
+
+Actors:
+===========
+
+id: 1
+name: 'Daniel Kaluuya'
+age: 31
+gender: 'male'
+
+id: 2
+name: 'Dominique Fishback'
+age: 29
+gender: 'female'
+
+id: 3
+name: 'Wesley Snipes'
+age: 59
+gender: 'male'
+
+id: 4
+name: 'Shari Headley'
+age: 57
+gender: 'female'
+
+id: 5
+name: 'Robin Shou'
+age: 61
+gender: 'male'
+
+id: 6
+name: 'Bridgette Wilson'
+age: 48
+gender: 'female'
+
+id: 7
+name: 'Jennifer Hudson'
+age: 40
+gender: 'female'
+
+id: 8
+name: 'Marlon Wayans'
+age: 49
+gender: 'male'
+
+
+
+
+
+
+
+
+
+
+
+
+

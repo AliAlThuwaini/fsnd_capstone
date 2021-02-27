@@ -1,7 +1,9 @@
-import os
+#import os
+#from castagency.models import Movies
 from flask import Flask, request, abort, jsonify
-from flask_sqlalchemy import SQLAlchemy
+#from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
+from models import *
 
 
 
@@ -31,7 +33,241 @@ def create_app(test_config=None):
     return response
 
 
+
+  #----------------------------------------------------------------------------#
+  # Controllers
+  #----------------------------------------------------------------------------#
+
+  # This is a general home just to make sure things are working
+  @app.route('/', methods=['GET'])
+  def home_page():
+    movies = Movies.query.all()
+    return jsonify({
+      'success': True,
+      'message': 'It worked',
+      'code': 200 ,
+      'movie_titles': {movie.id: movie.title for movie in movies}
+      })
+
+  #============================
+  # Movies:
+  #============================
+
+  # Get Movies
+  @app.route('/movie', methods=['GET'])
+  def get_movies():
+    movies = Movies.query.all()
+    if (len(movies) == 0):
+      abort(404)
+    try:
+      return jsonify({
+        'success': True,
+        'movies': {movie.id: movie.title for movie in movies}
+        })
+    except:
+      abort(422)
+
+
+
+  # Add new movie
+  @app.route('/add-movie', methods=['POST'])
+  #@requires_auth('post:movies')
+  def add_movie():
+    data = request.get_json()
+
+    try:
+      # Ensure that all required fields to create a movie are supplied
+      title = data.get('title', None)
+      release_date = data.get('release_date', None)
+      
+      if ((title is None) or (release_date is None)):
+        abort(422)
+
+      else:
+        # Create the movie instance
+        movie = Movies(title=title, release_date=release_date)
+
+        # insert the new movie into db
+        movie.insert()
+
+    except Exception as error:
+      print(f"\nerror => {error}\n")
+      abort(422)
+
+
+
+  # Edit an existing movie:
+  @app.route('/movie/<int:movie_id>', methods=['PATCH'])
+  #@requires_auth('patch:movie')
+  def update_movie(movie_id):
+
+    data = request.get_json()
+    # extract that specific movie to be updated from the db
+    movie = Movies.query.filter(Movies.id == movie_id).one_or_none()
     
+    # if movie not found, exit with 404
+    if not movie:
+        abort(404)
+    
+    try:
+      # Ensure that all required fields to create a movie are supplied
+      if 'title' in data:
+            movie.title = data['title']
+
+      if 'release_date' in data:
+          movie.release_date = data['release_date']
+
+      movie.update()
+
+      return jsonify({
+          'success': True,
+          'movie': movie.format(),
+      }), 200
+
+    except Exception as error:
+      print(f"\nerror => {error}\n")
+      abort(500)
+
+
+  # Delete an existing movie:
+  @app.route('/movie/<int:movie_id>', methods=['DELETE'])
+  #@requires_auth('delete:movie')
+  def delete_movie(movie_id):
+    if not movie_id:
+        abort(404)
+
+    # Get the movie to be deleted
+    to_delete_movie = Movies.query.get(movie_id).one_or_none()
+    if not to_delete_movie:
+        abort(404)
+    # delete the movie
+    to_delete_movie.delete()
+
+    return jsonify({
+        'success': True,
+        'movie_id': movie_id
+    }), 200
+
+
+
+
+
+  #============================
+  # actors:
+  #============================
+
+  # Get actors
+  @app.route('/actor', methods=['GET'])
+  def get_actors():
+    actors = Actors.query.all()
+    if (len(actors) == 0):
+      abort(404)
+    try:
+      return jsonify({
+        'success': True,
+        'actors': {actor.id: actor.name for actor in actors}
+        })
+    except:
+      abort(422)
+
+
+
+  # Add new actor
+  @app.route('/add-actor', methods=['POST'])
+  #@requires_auth('post:actors')
+  def add_actor():
+    data = request.get_json()
+
+    try:
+      # Ensure that all required fields to create a actor are supplied
+      name = data.get('name', None)
+      age = data.get('age', None)
+      gender = data.get('gender', None)
+      
+      if ((name is None) or (age is None) or (gender is None) ):
+        abort(422)
+
+      else:
+        # Create the actor instance
+        actor = Actors(name=name, age=age, gender=gender)
+
+        # insert the new actor into db
+        actor.insert()
+
+    except Exception as error:
+      print(f"\nerror => {error}\n")
+      abort(422)
+
+
+
+  # Edit an existing actor:
+  @app.route('/actor/<int:actor_id>', methods=['PATCH'])
+  #@requires_auth('patch:actor')
+  def update_actor(actor_id):
+
+    data = request.get_json()
+    # extract that specific actor to be updated from the db
+    actor = Actors.query.filter(Actors.id == actor_id).one_or_none()
+    
+    # if actor not found, exit with 404
+    if not actor:
+        abort(404)
+    
+    try:
+      # Ensure that all required fields to create a actor are supplied
+      if 'name' in data:
+            actor.name = data['name']
+      if 'age' in data:
+          actor.age = data['age']
+      if 'gender' in data:
+          actor.gender = data['gender']
+
+      actor.update()
+
+      return jsonify({
+          'success': True,
+          'actor': actor.format(),
+      }), 200
+
+    except Exception as error:
+      print(f"\nerror => {error}\n")
+      abort(500)
+
+
+  # Delete an existing actor:
+  @app.route('/actor/<int:actor_id>', methods=['DELETE'])
+  #@requires_auth('delete:actor')
+  def delete_actor(actor_id):
+    if not actor_id:
+        abort(404)
+
+    # Get the actor to be deleted
+    to_delete_actor = Actors.query.get(actor_id).one_or_none()
+    if not to_delete_actor:
+        abort(404)
+    # delete the actor
+    to_delete_actor.delete()
+
+    return jsonify({
+        'success': True,
+        'actor_id': actor_id
+    }), 200
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   return app
 
