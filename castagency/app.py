@@ -46,7 +46,7 @@ def create_app(test_config=None):
       'success': True,
       'message': 'It worked',
       'code': 200 ,
-      'movie_titles': {movie.id: movie.title for movie in movies}
+      'movie_titles': {movie.id: movie.title for movie in movies},
       })
 
   #============================
@@ -64,8 +64,28 @@ def create_app(test_config=None):
         'success': True,
         'movies': {movie.id: movie.title for movie in movies}
         })
+
     except:
       abort(422)
+
+
+  # @app.route('/add-movi', methods=['POST'])
+  # def add_movi():
+  #   data = request.get_json()
+  #   try:
+  #     # Ensure that all required fields to create a movie are supplied
+  #     title = data.get('title', None)
+  #     release_date = data.get('release_date', None)
+  #     print ('Movie title: ', title, '\n', 'Movie release date: ', release_date)
+
+  #   except Exception as error:
+  #     print(f"\nerror => {error}\n")
+  #     abort(422)
+
+  #   return jsonify({
+  #     'title': title,
+  #     'release_date': release_date
+  #   })
 
 
 
@@ -89,6 +109,12 @@ def create_app(test_config=None):
 
         # insert the new movie into db
         movie.insert()
+        
+        return jsonify({
+          'success': True,
+          'message': f'Movie with title "{title}" is inserted into DB',
+          'movie': movie.format()
+          })
 
     except Exception as error:
       print(f"\nerror => {error}\n")
@@ -113,7 +139,6 @@ def create_app(test_config=None):
       # Ensure that all required fields to create a movie are supplied
       if 'title' in data:
             movie.title = data['title']
-
       if 'release_date' in data:
           movie.release_date = data['release_date']
 
@@ -137,7 +162,7 @@ def create_app(test_config=None):
         abort(404)
 
     # Get the movie to be deleted
-    to_delete_movie = Movies.query.get(movie_id).one_or_none()
+    to_delete_movie = Movies.query.filter(Movies.id == movie_id).one_or_none()
     if not to_delete_movie:
         abort(404)
     # delete the movie
@@ -194,10 +219,15 @@ def create_app(test_config=None):
         # insert the new actor into db
         actor.insert()
 
+        return jsonify({
+          'success': True,
+          'message': f'Actor with name "{name}" is inserted into DB',
+          'actor': actor.format()
+          })
+
     except Exception as error:
       print(f"\nerror => {error}\n")
       abort(422)
-
 
 
   # Edit an existing actor:
@@ -242,7 +272,7 @@ def create_app(test_config=None):
         abort(404)
 
     # Get the actor to be deleted
-    to_delete_actor = Actors.query.get(actor_id).one_or_none()
+    to_delete_actor = Actors.query.filter(Actors.id == actor_id).one_or_none()
     if not to_delete_actor:
         abort(404)
     # delete the actor
@@ -254,10 +284,52 @@ def create_app(test_config=None):
     }), 200
 
 
+  #----------------------------------------------------------------------------#
+  # Error Handling
+  #----------------------------------------------------------------------------#
+
+  '''
+  Example error handling for unprocessable entity
+  '''
+  @app.errorhandler(422)
+  def unprocessable(error):
+      return jsonify({
+          "success": False,
+          "error": 422,
+          "message": "unprocessable"
+      }), 422
 
 
 
+  @app.errorhandler(400)
+  def bad_request(error):
+      return jsonify({
+          "success": False,
+          "error": 400,
+          "message": "Bad Request. Check request body"
+      }), 400
 
+
+  @app.errorhandler(404)
+  def not_found(error):
+      return jsonify({
+          "success": False,
+          "error": 404,
+          "message": "resource not found"
+      }), 404
+
+
+  # @app.errorhandler(AuthError)
+  # def authError(error):
+  #     return jsonify({
+  #         "success": False,
+  #         "error": error.status_code,
+  #         # "message": error.error['description']
+  #         "message": error.error
+  #     }), error.status_code
+
+
+#Note: consider adding error 405
 
 
 
