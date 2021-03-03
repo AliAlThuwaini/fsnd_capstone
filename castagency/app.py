@@ -4,6 +4,7 @@ from flask import Flask, request, abort, jsonify
 #from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from models import *
+from auth import AuthError, requires_auth
 
 
 
@@ -55,7 +56,8 @@ def create_app(test_config=None):
 
   # Get Movies
   @app.route('/movie', methods=['GET'])
-  def get_movies():
+  @requires_auth('get:movie')
+  def get_movies(payload):
     movies = Movies.query.all()
     if (len(movies) == 0):
       abort(404)
@@ -91,9 +93,9 @@ def create_app(test_config=None):
 
   # Add new movie
   @app.route('/add-movie', methods=['POST'])
-  #@requires_auth('post:movies')
-  def add_movie():
-    data = request.get_json()
+  @requires_auth('post:add-movie')
+  def add_movie(payload):
+    data = request.get_json() 
 
     try:
       # Ensure that all required fields to create a movie are supplied
@@ -124,8 +126,9 @@ def create_app(test_config=None):
 
   # Edit an existing movie:
   @app.route('/movie/<int:movie_id>', methods=['PATCH'])
+  @requires_auth('patch:movie')
   #@requires_auth('patch:movie')
-  def update_movie(movie_id):
+  def update_movie(payload, movie_id):
 
     data = request.get_json()
     # extract that specific movie to be updated from the db
@@ -156,8 +159,9 @@ def create_app(test_config=None):
 
   # Delete an existing movie:
   @app.route('/movie/<int:movie_id>', methods=['DELETE'])
+  @requires_auth('delete:movie')
   #@requires_auth('delete:movie')
-  def delete_movie(movie_id):
+  def delete_movie(payload, movie_id):
     if not movie_id:
         abort(404)
 
@@ -183,7 +187,8 @@ def create_app(test_config=None):
 
   # Get actors
   @app.route('/actor', methods=['GET'])
-  def get_actors():
+  @requires_auth('get:actor')
+  def get_actors(payload):
     actors = Actors.query.all()
     if (len(actors) == 0):
       abort(404)
@@ -199,8 +204,9 @@ def create_app(test_config=None):
 
   # Add new actor
   @app.route('/add-actor', methods=['POST'])
+  @requires_auth('post:add-actor')
   #@requires_auth('post:actors')
-  def add_actor():
+  def add_actor(payload):
     data = request.get_json()
 
     try:
@@ -232,8 +238,9 @@ def create_app(test_config=None):
 
   # Edit an existing actor:
   @app.route('/actor/<int:actor_id>', methods=['PATCH'])
+  @requires_auth('patch:actor')
   #@requires_auth('patch:actor')
-  def update_actor(actor_id):
+  def update_actor(payload, actor_id):
 
     data = request.get_json()
     # extract that specific actor to be updated from the db
@@ -266,8 +273,9 @@ def create_app(test_config=None):
 
   # Delete an existing actor:
   @app.route('/actor/<int:actor_id>', methods=['DELETE'])
+  @requires_auth('delete:actor')
   #@requires_auth('delete:actor')
-  def delete_actor(actor_id):
+  def delete_actor(payload, actor_id):
     if not actor_id:
         abort(404)
 
@@ -319,30 +327,20 @@ def create_app(test_config=None):
       }), 404
 
 
-  # @app.errorhandler(AuthError)
-  # def authError(error):
-  #     return jsonify({
-  #         "success": False,
-  #         "error": error.status_code,
-  #         # "message": error.error['description']
-  #         "message": error.error
-  #     }), error.status_code
+  @app.errorhandler(AuthError)
+  def authError(error):
+      return jsonify({
+          "success": False,
+          "error": error.status_code,
+          # "message": error.error['description']
+          "message": error.error
+      }), error.status_code
 
 
-#Note: consider adding error 405
-
-
-
-
-
-
-
-
-
+#Ali: consider adding error 405
 
 
   return app
-
 
 
 APP = create_app()
