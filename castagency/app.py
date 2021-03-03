@@ -327,6 +327,24 @@ def create_app(test_config=None):
       }), 404
 
 
+  @app.errorhandler(401)
+  def not_found(error):
+      return jsonify({
+          "success": False,
+          "error": 401,
+          "message": "Authorization Header missing, expected but not found!!"
+      }), 401
+
+  
+  @app.errorhandler(403)
+  def not_found(error):
+      return jsonify({
+          "success": False,
+          "error": 403,
+          "message": "User is not unauthorized to perform the process!!"
+      }), 403
+
+
   @app.errorhandler(AuthError)
   def authError(error):
       return jsonify({

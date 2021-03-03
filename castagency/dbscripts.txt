@@ -22,7 +22,7 @@ values
 ('Robin Shou', 61, 'male'),
 ('Bridgette Wilson', 48, 'female'),
 ('Jennifer Hudson', 40, 'female'),
-('Marlon Wayans', 49, 'male')
+('Marlon Wayans', 49, 'male');
 
 
 
