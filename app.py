@@ -1,6 +1,4 @@
-# from castagency.models import Movies
 from flask import Flask, request, abort, jsonify
-# from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from models import *
 from auth import AuthError, requires_auth

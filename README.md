@@ -46,7 +46,8 @@ python test_app.py
 The deployed application can be found here:
 
 https://fsnd-capstone-ali.herokuapp.com/
-git 
+
+Name of the app: fsnd-capstone-ali
 
 Note: If the existing JWT's are expired new ones could be obtained by following the link on the application homepage on auth0. The URL to the login can be generated from auth_url_generator.ipynb which can be found in auth folder.
 
