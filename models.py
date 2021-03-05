@@ -8,12 +8,12 @@ import os
 # ----------------------------------------------------------------- #
 
 database_name = "casting_agency"
-# # for local use:
-# database_path = "postgres://{}:{}@{}/{}".format(
-#     'student', 'student', 'localhost:5432', database_name)
+# for local use:
+database_path = "postgres://{}:{}@{}/{}".format(
+    'student', 'student', 'localhost:5432', database_name)
 
 # For heroku:
-database_path = os.getenv("DATABASE_URL")
+# database_path = os.getenv("DATABASE_URL")
 
 db = SQLAlchemy()
 
