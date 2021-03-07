@@ -129,9 +129,9 @@ def verify_decode_jwt(token):
             }, 400)
         except Exception:
             raise AuthError({
-              'code': 'invalid_header',
-              'description': 'Unable to find the appropriate key.'
-           }, 400)
+                'code': 'invalid_header',
+                'description': 'Unable to find the appropriate key.'
+            }, 400)
 
 
 def requires_auth(permission=''):
@@ -139,10 +139,11 @@ def requires_auth(permission=''):
         @wraps(f)
         def wrapper(*args, **kwargs):
             token = get_token_auth_header()
-            try:
-                payload = verify_decode_jwt(token)
-            except BaseException:
-                abort(401)
+            payload = verify_decode_jwt(token)
+            # try:
+            #     payload = verify_decode_jwt(token)
+            # except BaseException:
+            #     abort(401)
             check_permissions(permission, payload)
             return f(payload, *args, **kwargs)
         return wrapper
