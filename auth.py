@@ -128,9 +128,9 @@ def verify_decode_jwt(token):
                 'description': 'Unable to parse authentication token.'
             }, 400)
         except Exception:
-          raise AuthError({
-            'code': 'invalid_header',
-            'description': 'Unable to find the appropriate key.'
+            raise AuthError({
+              'code': 'invalid_header',
+              'description': 'Unable to find the appropriate key.'
            }, 400)
 
 
