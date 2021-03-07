@@ -36,12 +36,12 @@ def create_app(test_config=None):
 
     @app.route('/', methods=['GET'])
     def home_page():
-        #movies = Movies.query.all()
+        # movies = Movies.query.all()
         return jsonify({
             'success': True,
             'message': 'It worked',
             'code': 200,
-            #'movie_titles': {movie.id: movie.title for movie in movies},
+            # 'movie_titles': {movie.id: movie.title for movie in movies},
         })
 
     # ============================

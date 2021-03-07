@@ -19,7 +19,7 @@ from models import setup_db, Actors, Movies
 
 # Casting Assistant (can view movies and actors):
 CA_TOKEN = os.getenv("CA_TOKEN")
-        
+
 # Casting Director (CA role + can add, delete, patch actors and movies)
 CD_TOKEN = os.getenv("CD_TOKEN")
 
